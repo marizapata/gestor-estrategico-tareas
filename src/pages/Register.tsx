@@ -18,8 +18,13 @@ function Register() {
       await registerUser(email, password)
       alert('Cuenta creada correctamente')
     } catch (error) {
-      setError('No fue posible crear la cuenta')
-      console.error(error)
+  if (error instanceof Error) {
+    setError(error.message)
+  } else {
+    setError('No fue posible crear la cuenta')
+  }
+
+  console.error(error)
     } finally {
       setLoading(false)
     }
