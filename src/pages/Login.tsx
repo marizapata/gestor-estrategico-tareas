@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { loginUser } from '../features/authService'
 
 function Login() {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -16,15 +19,15 @@ function Login() {
 
     try {
       await loginUser(email, password)
-      alert('Inicio de sesión exitoso')
+      navigate('/')
     } catch (error) {
-  if (error instanceof Error) {
-    setError(error.message)
-  } else {
-    setError('No fue posible iniciar sesión')
-  }
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('No fue posible iniciar sesión')
+      }
 
-  console.error(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -37,6 +40,7 @@ function Login() {
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="email">Correo electrónico</label>
+
           <input
             id="email"
             type="email"
@@ -48,6 +52,7 @@ function Login() {
 
         <div>
           <label htmlFor="password">Contraseña</label>
+
           <input
             id="password"
             type="password"
