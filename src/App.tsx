@@ -7,6 +7,7 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Tasks from './pages/Tasks'
 
 function App() {
   const { user, loading } = useAuth()
@@ -50,6 +51,15 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/registro" element={<Register />} />
+
+        <Route
+          path="/tareas"
+          element={
+            <ProtectedRoute>
+              <Tasks />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   )
