@@ -1,42 +1,41 @@
 import { useEffect, useState } from 'react'
 import type { Task } from '../types/Task'
-import { getTasks } from '../features/taskService'
+import { subscribeToTasks } from '../features/taskService'
 
 export function useTasks(userId: string | null) {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  async function loadTasks() {
+  useEffect(() => {
     if (!userId) {
       setTasks([])
       setLoading(false)
       return
     }
 
-    try {
-      setLoading(true)
-      setError('')
+    setLoading(true)
+    setError('')
 
-      const data = await getTasks(userId)
+    const unsubscribe = subscribeToTasks(
+      userId,
+      (data) => {
+        setTasks(data)
+        setLoading(false)
+      },
+      (error) => {
+        console.error(error)
+        setError('No fue posible cargar las tareas.')
+        setLoading(false)
+      },
+    )
 
-      setTasks(data)
-    } catch (error) {
-      console.error(error)
-      setError('No fue posible cargar las tareas.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadTasks()
+    return unsubscribe
   }, [userId])
 
   return {
     tasks,
     loading,
     error,
-    loadTasks,
   }
 }

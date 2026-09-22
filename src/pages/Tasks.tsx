@@ -9,7 +9,7 @@ import TodoForm from '../components/TodoForm'
 
 function Tasks() {
   const { user } = useAuth()
-  const { tasks, loading, error, loadTasks } = useTasks(user?.uid ?? null)
+  const { tasks, loading, error } = useTasks(user?.uid ?? null)
 
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
   const [editTitle, setEditTitle] = useState('')
@@ -53,8 +53,6 @@ function Tasks() {
       setEditingTaskId(null)
       setEditTitle('')
       setEditDescription('')
-
-      await loadTasks()
     } catch (error) {
       console.error(error)
     }
@@ -74,8 +72,6 @@ function Tasks() {
       await updateTask(taskId, {
         completed: !completed,
       })
-
-      await loadTasks()
     } catch (error) {
       console.error(error)
     }
@@ -84,7 +80,6 @@ function Tasks() {
   async function handleDelete(taskId: string) {
     try {
       await deleteTask(taskId)
-      await loadTasks()
     } catch (error) {
       console.error(error)
     }
@@ -96,7 +91,7 @@ function Tasks() {
 
       <TodoForm
         userId={user.uid}
-        onTaskCreated={loadTasks}
+        onTaskCreated={() => {}}
       />
 
       {tasks.length === 0 ? (

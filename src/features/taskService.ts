@@ -1,9 +1,9 @@
 import {
   collection,
   addDoc,
-  getDocs,
   query,
   where,
+  onSnapshot,
   doc,
   updateDoc,
   deleteDoc,
@@ -18,7 +18,11 @@ export async function createTask(task: Omit<Task, 'id'>) {
   return await addDoc(tasksCollection, task)
 }
 
-export async function getTasks(userId: string) {
+export function subscribeToTasks(
+  userId: string,
+  onTasksChange: (tasks: Task[]) => void,
+  onError: (error: Error) => void,
+) {
   const tasksCollection = collection(db, 'tasks')
 
   const tasksQuery = query(
@@ -26,12 +30,22 @@ export async function getTasks(userId: string) {
     where('userId', '==', userId),
   )
 
-  const snapshot = await getDocs(tasksQuery)
+  const unsubscribe = onSnapshot(
+    tasksQuery,
+    (snapshot) => {
+      const tasks = snapshot.docs.map((document) => ({
+        id: document.id,
+        ...document.data(),
+      })) as Task[]
 
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  })) as Task[]
+      onTasksChange(tasks)
+    },
+    (error) => {
+      onError(error)
+    },
+  )
+
+  return unsubscribe
 }
 
 export async function updateTask(
