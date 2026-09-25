@@ -15,6 +15,10 @@ function Tasks() {
   const [editTitle, setEditTitle] = useState('')
   const [editDescription, setEditDescription] = useState('')
 
+  const [sendingSummary, setSendingSummary] = useState(false)
+  const [summaryMessage, setSummaryMessage] = useState('')
+  const [summaryError, setSummaryError] = useState('')
+
   if (loading) {
     return <p>Cargando tareas...</p>
   }
@@ -85,6 +89,61 @@ function Tasks() {
     }
   }
 
+  async function handleSendSummary() {
+  if (!user) {
+    setSummaryError(
+      'No hay usuario autenticado.',
+    )
+    return
+  }
+
+  const userEmail = user.email
+
+  if (!userEmail) {
+    setSummaryError(
+      'No se encontró un correo para el usuario autenticado.',
+    )
+    return
+  }
+
+  setSendingSummary(true)
+  setSummaryMessage('')
+  setSummaryError('')
+
+  try {
+    const response = await fetch('/api/send-summary', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: userEmail,
+        tasks,
+      }),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || 'No fue posible enviar el resumen.',
+      )
+    }
+
+    setSummaryMessage('Resumen enviado correctamente.')
+  } catch (error) {
+    console.error(error)
+
+    setSummaryError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible enviar el resumen.',
+    )
+  } finally {
+    setSendingSummary(false)
+  }
+}
+
   return (
     <main>
       <h1>Mis tareas</h1>
@@ -93,6 +152,26 @@ function Tasks() {
         userId={user.uid}
         onTaskCreated={() => {}}
       />
+
+      <section>
+        <button
+          type="button"
+          onClick={handleSendSummary}
+          disabled={sendingSummary}
+        >
+          {sendingSummary
+            ? 'Enviando resumen...'
+            : 'Enviar resumen por email'}
+        </button>
+
+        {summaryMessage && (
+          <p>{summaryMessage}</p>
+        )}
+
+        {summaryError && (
+          <p>{summaryError}</p>
+        )}
+      </section>
 
       {tasks.length === 0 ? (
         <p>No tienes tareas todavía.</p>
