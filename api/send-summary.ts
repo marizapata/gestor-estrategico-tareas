@@ -116,7 +116,11 @@ export default async function handler(
       },
     })
 
+    console.log('ANTES DE ENVIAR A SES')
+
     await ses.send(command)
+
+    console.log('DESPUÉS DE ENVIAR A SES')
 
     return response.status(200).json({
       message: 'Resumen enviado correctamente.',
