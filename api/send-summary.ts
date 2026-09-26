@@ -19,38 +19,25 @@ const ses = new SESClient({
   },
 })
 
-export default async function handler(request: Request) {
+export default async function handler(
+  request: any,
+  response: any,
+) {
   if (request.method !== 'POST') {
-    return new Response(
-      JSON.stringify({
-        error: 'Método no permitido',
-      }),
-      {
-        status: 405,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return response.status(405).json({
+      error: 'Método no permitido',
+    })
   }
 
   try {
-    const body = (await request.json()) as RequestBody
+    const body = request.body as RequestBody
 
     const { email, tasks } = body
 
     if (!email || !Array.isArray(tasks)) {
-      return new Response(
-        JSON.stringify({
-          error: 'El correo y las tareas son obligatorios.',
-        }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      return response.status(400).json({
+        error: 'El correo y las tareas son obligatorios.',
+      })
     }
 
     const completedTasks = tasks.filter(
@@ -131,30 +118,14 @@ export default async function handler(request: Request) {
 
     await ses.send(command)
 
-    return new Response(
-      JSON.stringify({
-        message: 'Resumen enviado correctamente.',
-      }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return response.status(200).json({
+      message: 'Resumen enviado correctamente.',
+    })
   } catch (error) {
     console.error('Error enviando el correo:', error)
 
-    return new Response(
-      JSON.stringify({
-        error: 'No fue posible enviar el correo.',
-      }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    )
+    return response.status(500).json({
+      error: 'No fue posible enviar el correo.',
+    })
   }
 }
