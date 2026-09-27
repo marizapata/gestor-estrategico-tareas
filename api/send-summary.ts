@@ -12,11 +12,18 @@ interface RequestBody {
 }
 
 const ses = new SESClient({
-  region: process.env.AWS_REGION,
+  region: 'us-east-2',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
   },
+})
+
+console.log('CONFIGURACIÓN AWS:', {
+  region: 'us-east-2',
+  tieneAccessKey: Boolean(process.env.AWS_ACCESS_KEY_ID),
+  tieneSecretKey: Boolean(process.env.AWS_SECRET_ACCESS_KEY),
+  tieneFromEmail: Boolean(process.env.AWS_SES_FROM_EMAIL),
 })
 
 export default async function handler(
