@@ -90,59 +90,57 @@ function Tasks() {
   }
 
   async function handleSendSummary() {
-  if (!user) {
-    setSummaryError(
-      'No hay usuario autenticado.',
-    )
-    return
-  }
-
-  const userEmail = user.email
-
-  if (!userEmail) {
-    setSummaryError(
-      'No se encontró un correo para el usuario autenticado.',
-    )
-    return
-  }
-
-  setSendingSummary(true)
-  setSummaryMessage('')
-  setSummaryError('')
-
-  try {
-    const response = await fetch('/api/send-summary', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: userEmail,
-        tasks,
-      }),
-    })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      throw new Error(
-        data.error || 'No fue posible enviar el resumen.',
-      )
+    if (!user) {
+      setSummaryError('No hay usuario autenticado.')
+      return
     }
 
-    setSummaryMessage('Resumen enviado correctamente.')
-  } catch (error) {
-    console.error(error)
+    const userEmail = user.email
 
-    setSummaryError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible enviar el resumen.',
-    )
-  } finally {
-    setSendingSummary(false)
+    if (!userEmail) {
+      setSummaryError(
+        'No se encontró un correo para el usuario autenticado.',
+      )
+      return
+    }
+
+    setSendingSummary(true)
+    setSummaryMessage('')
+    setSummaryError('')
+
+    try {
+      const response = await fetch('/api/send-summary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: userEmail,
+          tasks,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || 'No fue posible enviar el resumen.',
+        )
+      }
+
+      setSummaryMessage('Resumen enviado correctamente.')
+    } catch (error) {
+      console.error(error)
+
+      setSummaryError(
+        error instanceof Error
+          ? error.message
+          : 'No fue posible enviar el resumen.',
+      )
+    } finally {
+      setSendingSummary(false)
+    }
   }
-}
 
   return (
     <main>
@@ -174,14 +172,21 @@ function Tasks() {
       </section>
 
       {tasks.length === 0 ? (
-        <p>No tienes tareas todavía.</p>
+        <p className="empty-tasks">
+          No tienes tareas todavía.
+        </p>
       ) : (
-        <ul>
+        <ul className="task-list">
           {tasks.map((task) => (
-            <li key={task.id}>
+            <li
+              key={task.id}
+              className={`task-card ${
+                task.completed ? 'task-completed' : ''
+              }`}
+            >
               {editingTaskId === task.id ? (
-                <>
-                  <div>
+                <div className="task-edit">
+                  <div className="form-group">
                     <label htmlFor={`edit-title-${task.id}`}>
                       Título
                     </label>
@@ -195,8 +200,10 @@ function Tasks() {
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor={`edit-description-${task.id}`}>
+                  <div className="form-group">
+                    <label
+                      htmlFor={`edit-description-${task.id}`}
+                    >
                       Descripción
                     </label>
 
@@ -209,53 +216,66 @@ function Tasks() {
                     />
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleSaveEdit}
-                  >
-                    Guardar cambios
-                  </button>
+                  <div className="task-actions">
+                    <button
+                      type="button"
+                      className="button-primary"
+                      onClick={handleSaveEdit}
+                    >
+                      Guardar cambios
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={handleCancelEdit}
-                  >
-                    Cancelar
-                  </button>
-                </>
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      onClick={handleCancelEdit}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <>
-                  <strong>{task.title}</strong>
+                  <div className="task-content">
+                    <h3>{task.title}</h3>
 
-                  <p>{task.description}</p>
+                    {task.description && (
+                      <p>{task.description}</p>
+                    )}
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleToggleCompleted(
-                        task.id,
-                        task.completed,
-                      )
-                    }
-                  >
-                    {task.completed
-                      ? 'Marcar como pendiente'
-                      : 'Marcar como completada'}
-                  </button>
+                  <div className="task-actions">
+                    <button
+                      type="button"
+                      className="button-primary"
+                      onClick={() =>
+                        handleToggleCompleted(
+                          task.id,
+                          task.completed,
+                        )
+                      }
+                    >
+                      {task.completed
+                        ? 'Marcar como pendiente'
+                        : 'Marcar como completada'}
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => handleEdit(task.id)}
-                  >
-                    Editar
-                  </button>
+                    <button
+                      type="button"
+                      className="button-secondary"
+                      onClick={() => handleEdit(task.id)}
+                    >
+                      Editar
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(task.id)}
-                  >
-                    Eliminar
-                  </button>
+                    <button
+                      type="button"
+                      className="button-danger"
+                      onClick={() => handleDelete(task.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
                 </>
               )}
             </li>

@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import './firebase/config'
 import { useAuth } from './hooks/useAuth'
 import { logoutUser } from './features/authService'
@@ -26,17 +26,36 @@ function App() {
 
   return (
     <>
-      <p>
-        {user
-          ? `Usuario conectado: ${user.email}`
-          : 'No hay usuario conectado'}
-      </p>
+      <header className="app-header">
+        <div className="header-inner">
+          <Link to="/" className="brand">
+            Gestor
+          </Link>
 
-      {user && (
-        <button onClick={handleLogout}>
-          Cerrar sesión
-        </button>
-      )}
+          <nav className="main-nav">
+            <Link to="/">Inicio</Link>
+
+            {user && <Link to="/tareas">Tareas</Link>}
+
+            {!user && (
+              <>
+                <Link to="/login">Iniciar sesión</Link>
+                <Link to="/registro">Registrarse</Link>
+              </>
+            )}
+
+            {user && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="logout-button"
+              >
+                Cerrar sesión
+              </button>
+            )}
+          </nav>
+        </div>
+      </header>
 
       <Routes>
         <Route

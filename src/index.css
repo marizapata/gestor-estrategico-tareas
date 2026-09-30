@@ -1,111 +1,503 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  font-family:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  color: #f1f3f5;
+  background: #0d1117;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --bg: #0d1117;
+  --surface: #151b23;
+  --surface-soft: #111720;
+  --border: #252d38;
+
+  --text: #f1f3f5;
+  --text-secondary: #9aa4b2;
+  --text-muted: #6f7a89;
+
+  --accent: #8b7cff;
+  --accent-hover: #9b8eff;
+
+  --danger: #ef6b73;
+  --success: #63c69c;
+
+  --radius: 14px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+* {
   box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
 }
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* =========================
+   ROOT
+========================= */
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =========================
+   TEXT
+========================= */
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
+  color: var(--text-secondary);
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-code {
+/* =========================
+   MAIN
+========================= */
+
+main {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  background: #1c2430;
+  border-color: #364150;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* =========================
+   FORMS
+========================= */
+
+form {
+  width: 100%;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+input,
+textarea {
+  width: 100%;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: var(--surface-soft);
+  color: var(--text);
+
+  padding: 12px 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 0 3px rgba(139, 124, 255, 0.12);
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  main {
+    width: min(100% - 28px, 600px);
+    padding: 32px 0 60px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  button {
+    min-height: 44px;
+  }
+}
+/* =========================
+   HEADER
+========================= */
+
+.app-header {
+  width: 100%;
+  border-bottom: 1px solid var(--border);
+  background: rgba(13, 17, 23, 0.92);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  width: min(1100px, calc(100% - 40px));
+  min-height: 72px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.brand:hover {
+  color: var(--accent);
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.main-nav a {
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.main-nav a:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.logout-button {
+  margin-left: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.logout-button:hover {
+  color: var(--text);
+}
+
+@media (max-width: 700px) {
+  .header-inner {
+    width: min(100% - 28px, 600px);
+    min-height: 64px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .main-nav {
+    gap: 2px;
+  }
+
+  .main-nav a,
+  .logout-button {
+    padding: 7px 8px;
+    font-size: 13px;
+  }
+}
+/* =========================
+   LISTA DE TAREAS
+   ========================= */
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* =========================
+   TARJETA DE TAREA
+   ========================= */
+
+.task-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 22px;
+  background: #11161e;
+  border: 1px solid #252d38;
+  border-radius: 14px;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.task-card:hover {
+  border-color: #344050;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   CONTENIDO
+   ========================= */
+
+.task-content h3 {
+  margin: 0 0 7px;
+  color: #f1f5f9;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.task-content p {
+  margin: 0;
+  color: #8d9aad;
   font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  line-height: 1.6;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.task-actions button {
+  font-family: inherit;
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 9px 13px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Botón principal */
+
+.button-primary {
+  background: #e8edf3;
+  color: #0b0f14;
+  border: 1px solid #e8edf3;
+}
+
+.button-primary:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Botón secundario */
+
+.button-secondary {
+  background: transparent;
+  color: #aab5c4;
+  border: 1px solid #2b3440;
+}
+
+.button-secondary:hover {
+  color: #f1f5f9;
+  border-color: #465365;
+  background: #171d26;
+}
+
+/* Eliminar */
+
+.button-danger {
+  background: transparent;
+  color: #9ba5b3;
+  border: 1px solid #2b3440;
+}
+
+.button-danger:hover {
+  color: #e7a3a3;
+  border-color: #704646;
+  background: #211719;
+}
+
+/* =========================
+   TAREA COMPLETADA
+   ========================= */
+
+.task-completed {
+  opacity: 0.65;
+}
+
+.task-completed .task-content h3 {
+  text-decoration: line-through;
+  color: #8791a0;
+}
+
+.task-completed .task-content p {
+  color: #687383;
+}
+
+/* =========================
+   EDICIÓN
+   ========================= */
+
+.task-edit {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  color: #aab5c4;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0d1219;
+  color: #edf2f7;
+  border: 1px solid #29323e;
+  border-radius: 8px;
+  padding: 11px 12px;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #566579;
+}
+
+.form-group textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* =========================
+   SIN TAREAS
+   ========================= */
+
+.empty-tasks {
+  margin-top: 30px;
+  padding: 28px;
+  text-align: center;
+  color: #7f8a99;
+  border: 1px dashed #29323e;
+  border-radius: 12px;
+}
+
+/* =========================
+   MÓVIL
+   ========================= */
+
+@media (max-width: 700px) {
+  .task-card {
+    padding: 18px;
+  }
+
+  .task-actions {
+    flex-direction: column;
+  }
+
+  .task-actions button {
+    width: 100%;
+  }
 }
