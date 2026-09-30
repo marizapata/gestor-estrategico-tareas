@@ -8,6 +8,7 @@ function Login() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -44,6 +45,7 @@ function Login() {
           <input
             id="email"
             type="email"
+            placeholder="Ej: correo@ejemplo.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -55,11 +57,19 @@ function Login() {
 
           <input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Ingresa tu contraseña"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          </button>
         </div>
 
         <button type="submit" disabled={loading}>

@@ -4,7 +4,6 @@ import { useAuth } from './hooks/useAuth'
 import { logoutUser } from './features/authService'
 import ProtectedRoute from './routes/ProtectedRoute'
 
-import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Tasks from './pages/Tasks'
@@ -13,6 +12,14 @@ function App() {
   const { user, loading } = useAuth()
 
   async function handleLogout() {
+    const confirmed = window.confirm(
+      '¿Estás seguro de que quieres cerrar sesión?'
+    )
+
+    if (!confirmed) {
+      return
+    }
+
     try {
       await logoutUser()
     } catch (error) {
@@ -33,9 +40,7 @@ function App() {
           </Link>
 
           <nav className="main-nav">
-            <Link to="/">Inicio</Link>
-
-            {user && <Link to="/tareas">Tareas</Link>}
+            {user && <Link to="/">Inicio</Link>}
 
             {!user && (
               <>
@@ -62,7 +67,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Home />
+              <Tasks />
             </ProtectedRoute>
           }
         />
@@ -70,15 +75,6 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/registro" element={<Register />} />
-
-        <Route
-          path="/tareas"
-          element={
-            <ProtectedRoute>
-              <Tasks />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </>
   )

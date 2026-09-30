@@ -5,6 +5,11 @@ import { registerUser } from '../features/authService'
 function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -12,19 +17,25 @@ function Register() {
     event.preventDefault()
 
     setError('')
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden.')
+      return
+    }
+
     setLoading(true)
 
     try {
       await registerUser(email, password)
       alert('Cuenta creada correctamente')
     } catch (error) {
-  if (error instanceof Error) {
-    setError(error.message)
-  } else {
-    setError('No fue posible crear la cuenta')
-  }
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('No fue posible crear la cuenta')
+      }
 
-  console.error(error)
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -37,9 +48,11 @@ function Register() {
       <form onSubmit={handleRegister}>
         <div>
           <label htmlFor="email">Correo electrónico</label>
+
           <input
             id="email"
             type="email"
+            placeholder="Ej: correo@ejemplo.com"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -48,13 +61,50 @@ function Register() {
 
         <div>
           <label htmlFor="password">Contraseña</label>
+
           <input
             id="password"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Crea una contraseña"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
+
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          </button>
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword">
+            Confirmar contraseña
+          </label>
+
+          <input
+            id="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            placeholder="Repite tu contraseña"
+            value={confirmPassword}
+            onChange={(event) =>
+              setConfirmPassword(event.target.value)
+            }
+            required
+          />
+
+          <button
+            type="button"
+            onClick={() =>
+              setShowConfirmPassword(!showConfirmPassword)
+            }
+          >
+            {showConfirmPassword
+              ? 'Ocultar contraseña'
+              : 'Mostrar contraseña'}
+          </button>
         </div>
 
         <button type="submit" disabled={loading}>

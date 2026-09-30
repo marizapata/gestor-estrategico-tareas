@@ -82,12 +82,20 @@ function Tasks() {
   }
 
   async function handleDelete(taskId: string) {
-    try {
-      await deleteTask(taskId)
-    } catch (error) {
-      console.error(error)
-    }
+  const confirmed = window.confirm(
+    '¿Estás seguro de que quieres eliminar esta tarea?'
+  )
+
+  if (!confirmed) {
+    return
   }
+
+  try {
+    await deleteTask(taskId)
+  } catch (error) {
+    console.error(error)
+  }
+}
 
   async function handleSendSummary() {
     if (!user) {
